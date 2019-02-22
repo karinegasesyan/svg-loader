@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<style>
+			.container{
+			    width: 144px;
+			    height: 144px;
+			    background: rgba(0, 0, 0, .4);
+			    margin: 0 auto;
+			    position: relative;
+			}
+	  		.svg-timer{
+		    	position: absolute;
+			    top: 16px;
+			    left: 16px;
+			    width: 114px;
+			    height: 114px;
+			    display: flex;
+			    justify-content: center;
+			    align-items: center;
+		    }
+			.circle-background,
+			.circle-progress {
+			  fill: none;
+			}
+
+			.circle-background {
+			  stroke: #ffffff;
+			}
+
+			.circle-progress {
+			  stroke-linecap: round;
+			  stroke-linejoin: round;
+			}
+			.green-color{
+				stroke: #00912C;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<div class="svg-timer"></div>
+		</div>	
+
+
+		<script type="text/javascript">
+			function circularProgressBar() {
+			  const strokeWidth = "8";
+			  const percentage = 40;
+			  const sqSize = "114";
+			  // SVG centers the stroke width on the radius, subtract out so circle fits in square
+			  const radius = (sqSize - strokeWidth) / 2;
+			  // Enclose cicle in a circumscribing square
+			  const viewBox = `0 0 ${sqSize} ${sqSize}`;
+			  // Arc length at 100% coverage is the circle circumference
+			  const dashArray = radius * Math.PI * 2;
+			  // Scale 100% coverage overlay with the actual percent
+			  const dashOffset = dashArray - (dashArray * percentage) / 100;
+			  return `
+			    <svg width="${sqSize}" height="${sqSize}" viewBox="${viewBox}">
+			      <circle
+			        class="circle-background"
+			        cx="${sqSize / 2}"
+			        cy="${sqSize / 2}"
+			        r="${radius}"
+			        stroke-width="${strokeWidth}px"
+			      />
+			      <circle
+			        class="circle-progress green-color"
+			        cx="${sqSize / 2}"
+			        cy="${sqSize / 2}"
+			        r="${radius}"
+			        stroke-width="${strokeWidth}px"
+
+			        transform="${`rotate(-90 ${sqSize / 2} ${sqSize / 2})`}"
+			        style="stroke-dasharray: ${dashArray}; stroke-dashoffset: ${dashOffset}"
+			      />
+			      <text
+			        class="circle-text"
+			        x="50%"
+			        y="50%"
+			        dy=".3em"
+			        text-anchor="middle"
+			      >
+			        ${percentage}%
+			      </text>
+			    </svg>
+			  `;
+			}
+
+			var progressBar = document.querySelector('.svg-timer');
+			progressBar.innerHTML += circularProgressBar();
+		</script>
+	</body>
+</html>
